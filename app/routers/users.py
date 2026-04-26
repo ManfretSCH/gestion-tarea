@@ -40,6 +40,10 @@ def update_user(user_id: int, user_update: UserUpdate, db=Depends(get_db)):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
+    existing_user = db.query(User).filter(User.email == user_update.email, User.id != user_id).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User with this email already exists")
+    
     for key, value in user_update.model_dump(exclude_unset=True).items():
         setattr(user, key, value)
     db.commit()
