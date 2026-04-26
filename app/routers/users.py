@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.schemas import UserCreate, UserResponse
+from app.schemas import UserCreate, UserResponse, UserUpdate
 from app.database import get_db
 from app.models import User, Task
 
@@ -35,7 +35,7 @@ def get_user(user_id: int, db=Depends(get_db)):
 
 
 @router.patch("/{user_id}", status_code= 200, response_model=UserResponse)
-def update_user(user_id: int, user_update: UserCreate, db=Depends(get_db)):
+def update_user(user_id: int, user_update: UserUpdate, db=Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

@@ -38,3 +38,8 @@ class UserResponse(BaseModel):
     email: str
     age: int
     tasks: list[TaskResponse] = []
+
+class UserUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    age: Optional[int] = None
