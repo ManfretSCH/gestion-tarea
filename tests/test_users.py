@@ -25,9 +25,10 @@ def test_get_user(client):
         "email": "john.doe@example.com",
         "age": 30
     }
-    client.post("/users/", json=user_data)
+    response = client.post("/users/", json=user_data)
+    user_id = response.json()["id"]
 
-    response = client.get("/users/1")
+    response = client.get(f"/users/{user_id}")
     assert response.status_code == 200
 
 def test_duplicate_email(client):
@@ -52,14 +53,15 @@ def test_update_user(client):
         "email": "alice@gmail.com",
         "age": 28
     }
-    client.post("/users/", json=user_data)
+    response = client.post("/users/", json=user_data)
+    user_id = response.json()["id"]
 
     user_data_update = {
         "name": "Alice Smith",
         "email": "alice.smith@example.com",
         "age": 29
     }
-    response = client.patch("/users/1", json=user_data_update)
+    response = client.patch(f"/users/{user_id}", json=user_data_update)
     assert response.status_code == 200
 
 
@@ -69,10 +71,11 @@ def test_delete_user(client):
         "email": "bob@example.com",
         "age": 35
     }
-    client.post("/users/", json=user_data)
+    response = client.post("/users/", json=user_data)
+    user_id = response.json()["id"]
 
-    response = client.delete("/users/1")
+    response = client.delete(f"/users/{user_id}")
     assert response.status_code == 204
 
-    response = client.get("/users/1")
+    response = client.get(f"/users/{user_id}")
     assert response.status_code == 404
